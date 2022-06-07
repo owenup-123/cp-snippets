@@ -1,0 +1,59 @@
+<snippet>
+	<content><![CDATA[
+typedef struct deta
+{
+	deta* bit[2];
+	int cnt=0;
+}TRIE;
+ 
+TRIE* head;
+ 
+void insert(int x)
+{
+	TRIE* node = head;
+	for(int i=30;i>=0;i--)
+	{
+		int curbit=(x>>i)&1;
+		if(node->bit[curbit]==NULL)
+		{
+			node->bit[curbit]=new TRIE();
+		}  
+		node=node->bit[curbit];
+		node->cnt++;
+	}
+}
+ 
+void remove(int x)
+{
+	TRIE* node = head;
+	for(int i=30;i>=0;i--)
+	{
+		int curbit=(x>>i)&1;
+		node=node->bit[curbit];
+		node->cnt--;
+	}
+}
+ 
+int maxxor(int x)
+{
+	TRIE* node = head;
+	int ans=0;
+	for(int i=30;i>=0;i--)
+	{
+		int curbit=(x>>i)&1;
+		if(node->bit[curbit^1]!=NULL && node->bit[curbit^1]->cnt>0)
+		{
+			ans+=(1LL<<i);
+			node=node->bit[curbit^1];
+		}
+		else
+			node=node->bit[curbit];
+	}
+	return ans;
+}
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	 <tabTrigger>trie1</tabTrigger> 
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<!-- <scope>source.python</scope> -->
+</snippet>

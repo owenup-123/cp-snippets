@@ -1,0 +1,58 @@
+<snippet>
+	<content><![CDATA[
+map<pair<int, int>, vector<pair<int,int>>> g;
+int n, m;
+int dx[] = {-1, 0, 1};
+int dy[] = {-1, 0, 1};
+pair<int, int> root, des;
+map<pair<int, int>, int> dis, vis;
+
+void bfs(pair<int, int> root) {
+	deque<pair<int, int>> q;
+	q.push_back(root);
+	dis[root] = 0;
+	while(q.size() > 0) {
+		for(auto i: g[q.front()]) {
+			if(vis[i]) {
+				continue;
+			}
+			q.push_back(i);
+			vis[i] = true;
+			dis[i] += dis[q.front()] + 1;
+		}
+		q.pop_front();
+	}
+}
+
+bool isvalid (int x, int y, int n, int m) {
+	return ((x >= 0 and x < n) and (y >= 0 and y < m));
+}
+
+void solve(vector<vector<string>> map)
+{
+   for(int x = 0; x < n; x++) {
+   	  for(int y = 0; y < m; y++) {
+   	  	  for(int j = 0; j < 3; j++) {
+   	  	  	 for(int k = 0; k < 3; k++) {
+	   	  	  	 	if(dx[j] == 0 and dy[k] == 0) continue;
+	   	  	  	 	if(dx[j] != 0 and dy[k]!= 0) continue;
+	   	  	  	 	if(!isvalid(x + dx[j], y + dy[k], n, m)) continue;
+	   	  	  	 	if(map[x + dx[j]][y + dy[k]] == "P") continue;
+	   	  	  	 	if(map[x + dx[j]][y + dy[k]] != "P")
+	   	  	  	 	g[{x, y}].pb({x + dx[j], y + dy[k]});
+   	  	  	 }
+   	  	  }
+   	  	  if(map[x][y] == "R") root = {x,y}; if(map[x][y] == "E") des = {x,y};
+   	  }
+   }  
+
+   bfs(root); 
+
+   cout << dis[des];
+}
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	 <tabTrigger>bfsingrid</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<!-- <scope>source.python</scope> -->
+</snippet>

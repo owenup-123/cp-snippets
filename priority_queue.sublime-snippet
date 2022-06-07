@@ -1,0 +1,17 @@
+<snippet>
+	<content><![CDATA[
+class cmp {
+  public:
+  bool operator()(pll p1, pll p2) 
+  {
+     if(p1.ff == p2.ff) return p1.ss > p2.ss;
+     return p1.ff < p2.ff;
+  }
+};
+//   priority_queue<pll, vector<pll>, cmp> pq;
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>priority_queue</tabTrigger> 
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<!-- <scope>source.python</scope> -->
+</snippet>

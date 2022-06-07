@@ -1,0 +1,77 @@
+<snippet>
+	<content><![CDATA[
+class LRUCache {
+public:
+	class Node {
+		public:
+			int key;
+			int val;
+			Node *next, *prev;
+
+		Node() : key(-1), val(-1) {} // default constructor
+		Node(int _key, int _val) : key(_key), val(_val) {} // shortcut for constructor
+	};
+
+	int capacity;
+	unordered_map<int, Node*> cache;
+	Node *head = new Node();
+	Node *tail = new Node();
+
+	LRUCache(int _capacity) {	// constructor
+		capacity = _capacity;
+		head->next = tail;
+		tail->prev = head; 
+
+	}
+
+	void addNode(Node* newNode) {
+		Node* temp = head->next;
+		head->next = newNode;
+		newNode->prev = head;
+
+		newNode->next = temp;
+		temp->prev = newNode;
+	}
+
+	void deleteNode(Node* delNode) {
+		Node* temp = delNode->prev;
+		delNode->prev->next = delNode->next;
+		delNode->next->prev = temp;
+	}
+
+
+	int get(int _key) {
+		if (cache.find(_key) == cache.end()) 
+			return -1;
+
+		Node* found = cache[_key]; // found the node
+		int foundVal = found->val;
+		deleteNode(found);   	   // delete from linked list
+		addNode(found);	           // add to the head->next as it is last recent used 
+		cache[_key] = head->next;  // reassign it's new pos which is head->next, to the cache 
+		return foundVal;		   // return the val as it was founded in cache 
+	}
+
+	void put(int _key, int _val) {	
+		if (cache.find(_key) != cache.end()) { // check whether the key is already present in cache or not
+			Node* found = cache[_key];          
+			cache.erase(_key);				   // erase that found node 
+			deleteNode(found);                 // delete that node from  linked list 
+		}
+		if (capacity == cache.size()) {        // if cache size is equal to capacity then we should remove 
+			Node* node = tail->prev;		   // from the linked list
+			cache.erase(node->key);
+			deleteNode(node);     
+		}
+
+		addNode(new Node(_key, _val));
+		cache[_key] = head->next; 
+	}
+
+};
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	 <tabTrigger>lru_cache</tabTrigger> 
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<!-- <scope>source.python</scope> -->
+</snippet>

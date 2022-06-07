@@ -1,0 +1,38 @@
+<snippet>
+	<content><![CDATA[
+ll calc(ll x)
+{
+	
+}
+
+ll ternary_search(ll lo, ll hi)
+{
+	while(lo < hi - 2)
+	{
+		ll m1 = (lo * 2 + hi) / 3;
+		ll m2 = (lo + hi * 2) / 3;
+		if(calc(m1) <= calc(m2))
+			hi = m2;
+		else
+			lo = m1;
+	}
+	
+	ll val = inf;
+
+	int idx = lo;
+	for(int i = lo; i <= hi; i++)
+	{
+		if(val > calc(i))
+		{
+			idx = i;
+			val = calc(i);
+		}
+	}
+	return idx;
+}
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	 <tabTrigger>ternary_search</tabTrigger> 
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<!-- <scope>source.python</scope> -->
+</snippet>

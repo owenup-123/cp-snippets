@@ -1,0 +1,36 @@
+<snippet>
+	<content><![CDATA[
+struct graph {
+  int n;
+  vector<vector<int>> adj, rdj;
+  graph(int n) : n(n), adj(n), rdj(n) { }
+  void add_edge(int src, int dst) {
+    adj[src].push_back(dst);
+    rdj[dst].push_back(src);
+  }
+
+  vector<vector<int>> strongly_connected_components() { // kosaraju
+    vector<int> ord, visited(n);
+    vector<vector<int>> scc;
+    function<void(int, vector<vector<int>>&, vector<int>&)> dfs
+    = [&](int u, vector<vector<int>> &adj, vector<int> &out) {
+      visited[u] = true;
+      for (int v : adj[u])
+        if (!visited[v]) dfs(v, adj, out);
+      out.push_back(u);
+    };
+    for (int u = 0; u < n; ++u)
+      if (!visited[u]) dfs(u, adj, ord);
+    fill(all(visited), false);
+    for (int i = n - 1; i >= 0; --i)
+      if (!visited[ord[i]])
+        scc.push_back({}), dfs(ord[i], rdj, scc.back());
+    return scc;
+  }
+};
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	 <tabTrigger>kosaraju</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<!-- <scope>source.python</scope> -->
+</snippet>

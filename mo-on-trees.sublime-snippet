@@ -1,0 +1,173 @@
+<snippet>
+	<content><![CDATA[
+#include <bits/stdc++.h>
+using namespace std;
+ 
+const int MAXN = 500005;
+const int MAXM = 500005;
+#define ll long long
+
+const int LN = 19;
+ 
+int N, M, K, cur, A[MAXN], LVL[MAXN], DP[LN][MAXN];
+int BL[MAXN << 1], ID[MAXN << 1], VAL[MAXN];
+ll l[MAXN], r[MAXN], ANS[MAXM];
+
+bool VIS[MAXN];
+vector <int> g[MAXN];
+
+inline int64_t gilbertOrder(int x, int y, int pow, int rotate) {
+	if (pow == 0) {
+		return 0;
+	}
+	int hpow = 1 << (pow-1);
+	int seg = (x < hpow) ? (
+		(y < hpow) ? 0 : 3
+	) : (
+		(y < hpow) ? 1 : 2
+	);
+	seg = (seg + rotate) & 3;
+	const int rotateDelta[4] = {3, 0, 0, 1};
+	int nx = x & (x ^ hpow), ny = y & (y ^ hpow);
+	int nrot = (rotate + rotateDelta[seg]) & 3;
+	int64_t subSquareSize = int64_t(1) << (2*pow - 2);
+	int64_t ans = seg * subSquareSize;
+	int64_t add = gilbertOrder(nx, ny, pow-1, nrot);
+	ans += (seg == 1 || seg == 2) ? add : (subSquareSize - add - 1);
+	return ans;
+}
+
+struct query{
+	int id, l, r, lc;
+	int64_t ord;
+ 
+	inline void calcOrder() {
+		ord = gilbertOrder(l, r, 21, 0);
+	}
+}Q[MAXM];
+
+inline bool operator<(const query &a, const query &b) {
+	return a.ord < b.ord;
+}
+ 
+// Set up Stuff
+void dfs(int u, int par, int h){
+	l[u] = ++cur; 
+	ID[cur] = u;
+	LVL[u] = h;
+	for (int i = 1; i < LN; i++) DP[i][u] = DP[i - 1][DP[i - 1][u]];
+	for (int i = 0; i < g[u].size(); i++){
+		int v = g[u][i];
+		if (v == par) continue;
+		DP[0][v] = u;
+		dfs(v, u, h + 1);
+	}
+	r[u] = ++cur; ID[cur] = u;
+}
+ 
+// Function returns lca of (u) and (v)
+inline int lca(int u, int v){
+	if (LVL[u] > LVL[v]) swap(u, v);
+	for (int i = LN - 1; i >= 0; i--)
+		if (LVL[v] - (1 << i) >= LVL[u]) v = DP[i][v];
+	if (u == v) return u;
+	for (int i = LN - 1; i >= 0; i--){
+		if (DP[i][u] != DP[i][v]){
+			u = DP[i][u];
+			v = DP[i][v];
+		}
+	}
+	return DP[0][u];
+}
+ 
+inline void check(int x, ll& ans){
+	// If (x) occurs twice, then don't consider it's value 
+	//cout << mod << ' ';
+	if((VIS[x])) {
+	
+
+	}
+	else if ((!VIS[x])) {
+		
+	}
+
+	VIS[x] ^= 1;
+}
+
+void compute(){
+	
+	// Perform standard Mo's Algorithm
+	ll curL = Q[0].l, curR = Q[0].l - 1, ans = 0;
+	
+	for (int i = 0; i < M; i++){
+		
+		while (curL < Q[i].l) check(ID[curL++], ans);
+		while (curL > Q[i].l) check(ID[--curL], ans);
+		while (curR < Q[i].r) check(ID[++curR], ans);
+		while (curR > Q[i].r) check(ID[curR--], ans);
+		
+		int u = ID[curL], v = ID[curR];
+		
+		// Case 2
+		if (Q[i].lc != u and Q[i].lc != v) check(Q[i].lc, ans);
+
+		ANS[Q[i].id] = ans; 
+		
+		if (Q[i].lc != u and Q[i].lc != v) check(Q[i].lc, ans);
+	}
+ 
+	for (int i = 0; i < M; i++) printf("%lld\n", ANS[i]);
+}
+ 
+int main(){
+ 
+	int u, v, x;
+	
+	while (scanf("%d %d", &N, &M) != EOF){
+		
+		// Cleanup
+		cur = 0;
+		memset(VIS, 0, sizeof(VIS));
+		memset(VAL, 0, sizeof(VAL));
+		for (int i = 1; i <= N; i++) g[i].clear();
+		
+		// Inputting Values
+		for (int i = 1; i <= N; i++) scanf("%d", &A[i]);
+		
+		// Inputting Tree
+		for (int i = 1; i < N; i++){
+			scanf("%d %d", &u, &v);
+			g[u].push_back(v);
+			g[v].push_back(u);
+		}
+		
+		// Preprocess
+		DP[0][1] = 1;
+		dfs(1, -1, 1);// for(int i = 1; i <= 2 * N; i++) cout << ID[i] << ' '; cout << endl;
+		int size = 350;
+		
+		for (int i = 1; i <= cur; i++) BL[i] = (i - 1) / size + 1;
+
+		
+		for (int i = 0; i < M; i++){
+			scanf("%d %d", &u, &v);
+			Q[i].lc = lca(u, v);
+			if (l[u] > l[v]) swap(u, v);
+			if (Q[i].lc == u) Q[i].l = l[u], Q[i].r = l[v];
+			else Q[i].l = r[u], Q[i].r = l[v];
+			//cout << Q[i].l << ' ' << Q[i].r << endl;
+			Q[i].id = i;
+			Q[i].calcOrder();
+		}
+ 
+		sort(Q, Q + M);
+		compute();
+	}
+}
+ 
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	 <tabTrigger>mo on trees</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<!-- <scope>source.python</scope> -->
+</snippet>

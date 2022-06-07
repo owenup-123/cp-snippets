@@ -1,0 +1,66 @@
+<snippet>
+	<content><![CDATA[
+struct FenwickTree
+{
+	ll len;
+	vector<ll> tree;
+ 
+	void init(ll n)
+	{
+		len = n;
+		tree.assign(n + 1, 0);
+	}
+ 
+	void update(ll idx, ll val)
+	{
+		while (idx <= len)
+		{
+			tree[idx] += val;
+			idx += idx & -idx;
+		}
+	}
+ 
+	void updateMax(ll idx, ll val)
+	{
+		while (idx <= len)
+		{
+			tree[idx] = max(tree[idx], val);
+			idx += idx & -idx;
+		}
+	}
+ 
+	ll pref(ll idx)
+	{
+		ll ans = 0;
+		while (idx > 0)
+		{
+			ans += tree[idx];
+			idx -= idx & -idx;
+		}
+		return ans;
+	}
+ 
+	ll rsum(ll l, ll r)
+	{
+		return pref(r) - pref(l - 1);
+	}
+ 
+	ll prefMax(ll idx)
+	{
+		ll ans = -2e9;
+		while (idx > 0)
+		{
+			ans = max(ans, tree[idx]);
+			idx -= idx & -idx;
+		}
+		return ans;
+	}
+};
+ 
+FenwickTree oset;
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	 <tabTrigger>fenwick</tabTrigger> 
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<!-- <scope>source.python</scope> -->
+</snippet>

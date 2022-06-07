@@ -1,0 +1,76 @@
+<snippet>
+	<content><![CDATA[
+// number of numbers btwn L, R where cnt of 3 = cnt of 6 = cnt of 9
+ll solve(string r) {
+     int cnt[20][20][20], ncnt[20][20][20];
+     memset(cnt, 0, sizeof cnt); 
+     ll th = 0, sx = 0, nin = 0;
+     for(int id = 0; id < sz(r); id++) {
+         memset(ncnt, 0, sizeof ncnt);
+         //prefix_till now + new dig
+         for(int i = (id ? 0 : 1); i < r[id] - '0'; i++) {
+                //  if(th >= 18 or sx >= 18 or nin >= 18) break;
+                //  if(i == 3) ncnt[th + 1][sx][nin]++;
+                //  else if(i == 6) ncnt[th][sx + 1][nin]++; 
+                //  else if(i == 9) ncnt[th][sx][nin + 1]++;
+                //  else ncnt[th][sx][nin]++;
+         }
+         // single digit numbers
+         if(id) {
+               for(int i = 1; i <= 9; i++) {
+                //  if(i == 3) ncnt[1][0][0]++, ncnt[1][0][0] %= mod;
+                //  else if(i == 6) ncnt[0][1][0]++, ncnt[0][1][0] %= mod;
+                //  else if(i == 9) ncnt[0][0][1]++, ncnt[0][0][1] %= mod;
+                //  else ncnt[0][0][0]++, ncnt[0][0][0] %= mod;
+               }
+         }
+         // using all smaller numbers cntrbtn
+         for(int i = 0; i < 18; i++) {
+              for(int j = 0; j < 18; j++) {
+                 for(int k = 0; k < 18; k++) {
+                    for(int dig = 0; dig <= 9; dig++) {
+                       // if(dig == 3) ncnt[i + 1][j][k] = add(ncnt[i + 1][j][k], cnt[i][j][k]); 
+                       // else if(dig == 6) ncnt[i][j + 1][k] = add(ncnt[i][j + 1][k], cnt[i][j][k]); 
+                       // else if(dig == 9) ncnt[i][j][k + 1] = add(ncnt[i][j][k + 1], cnt[i][j][k]); 
+                       // else ncnt[i][j][k] = add(ncnt[i][j][k], cnt[i][j][k]);
+                    }
+                 }  
+              }
+         }
+         //update info of the prefix
+         //if(r[id] == '3') th++;
+         //if(r[id] == '6') sx++;
+         //if(r[id] == '9') nin++;
+         swap(cnt, ncnt);
+     }
+     //update cntrbtn of r (last number)
+     //cnt[th][sx][nin]++;
+     //cnt[th][sx][nin] %= mod;
+     ll sum = 0;
+     ll res = 0;
+     for(int i = 1; i < 18; i++) res = add(res, cnt[i][i][i]);
+     return res;
+}
+void solve()
+{
+   string l, r;
+   cin >> l >> r;
+   ll ans = solve(r) - solve(l);
+   ans += mod;
+   ans %= mod;
+   ll th = 0, sx = 0, nin = 0;
+   for(auto i: l) {
+       if(i == '3') th++;
+       if(i == '6') sx++;
+       if(i == '9') nin++;
+   }
+   if(th == sx and sx == nin and sx) ans++;
+   ans %= mod;
+   cout << ans << endl;
+}
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	 <tabTrigger>digit_dp</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<!-- <scope>source.python</scope> -->
+</snippet>
