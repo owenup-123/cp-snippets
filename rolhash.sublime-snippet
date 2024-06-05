@@ -31,7 +31,7 @@ struct Hashs
 	}
 };
 // Hashs x;
-// x = Hashs(s,p,mod);
+// x = Hashs(s,p,mod); p = 31, mod = 1e9+7
 ]]></content>
 	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
 	 <tabTrigger>rollhash</tabTrigger>
