@@ -2,10 +2,10 @@
 	<content><![CDATA[
 class cmp {
   public:
-  bool operator()(pll p1, pll p2) 
+  bool operator()(pll low_priority, pll high_priority) 
   {
-     if(p1.ff == p2.ff) return p1.ss > p2.ss;
-     return p1.ff < p2.ff;
+     if(low_priority.ff == high_priority.ff) return low_priority.ss > high_priority.ss;
+     return low_priority.ff < high_priority.ff;
   }
 };
 //   priority_queue<pll, vector<pll>, cmp> pq;
