@@ -1,7 +1,7 @@
 <snippet>
 	<content><![CDATA[
 // number of numbers btwn L, R where cnt of 3 = cnt of 6 = cnt of 9
-// donot include 0 range is [1, r]
+// donot include 0 range is [1, r], handle 0 separately
 ll solve(string r) {
      int cnt[20][20][20], ncnt[20][20][20];
      memset(cnt, 0, sizeof cnt); 
